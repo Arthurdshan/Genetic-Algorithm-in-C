@@ -6,6 +6,7 @@
 
 int main()
 {
+    // target string
     const char *target = "I love learning new things such as genetic algorithms";
 
     genetic_algorithm(1000, target, &random_char, &fitness);
