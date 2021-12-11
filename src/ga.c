@@ -102,12 +102,12 @@ Individual *selection(Population *population)
     //     i = population->pop_size - 1;
     // }
 
-    int random = rand() % (int) population->pop_size / 2;
+    int random = rand() % (int)population->pop_size / 2;
 
     return create_individual(population->population[random]->genome, population->population[random]->fitness);
 }
 
-char **single_point_crossing_over(Individual *p1, Individual *p2)
+char **single_point_crossing_over(Individual *p1, Individual *p2, char (*rand_char)(void))
 {
     int size = strlen(p1->genome);
 
@@ -127,15 +127,14 @@ char **single_point_crossing_over(Individual *p1, Individual *p2)
             }
             else if (p < 0.90)
             {
-                offsprings[i][j] = p2->genome[j];    
+                offsprings[i][j] = p2->genome[j];
             }
-            else 
+            else
             {
-                offsprings[i][j] = random_char();    
+                offsprings[i][j] = random_char();
             }
         }
     }
-
 
     offsprings[0][size] = '\0';
     offsprings[1][size] = '\0';
@@ -214,7 +213,7 @@ void genetic_algorithm(
             Individual *p1 = selection(population);
             Individual *p2 = selection(population);
 
-            char **offsprings = single_point_crossing_over(p1, p2);
+            char **offsprings = single_point_crossing_over(p1, p2, rand_char);
 
             new_generation->population[j++] = create_individual(offsprings[0], -1);
             new_generation->population[j++] = create_individual(offsprings[1], -1);

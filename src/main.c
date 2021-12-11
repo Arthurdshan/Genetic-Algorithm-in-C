@@ -6,7 +6,7 @@
 
 int main()
 {
-    const char *target = "Estou aprendendo algoritmos geneticos";
+    const char *target = "I love learning new things such as genetic algorithms";
 
-    genetic_algorithm(100, target, &random_char, &fitness);
+    genetic_algorithm(1000, target, &random_char, &fitness);
 }

@@ -91,9 +91,10 @@ Individual *selection(Population *population);
  *
  * @param p1 Pointer to the first parent
  * @param p2 Pointer to the second parent
+ * @param rand_char Pointer to the function that generates a random char
  * @return char**
  */
-char **single_point_crossing_over(Individual *p1, Individual *p2);
+char **single_point_crossing_over(Individual *p1, Individual *p2, char (*rand_char)(void));
 
 /**
  * @brief Function that simulates the mutation on a single genome from the population.
@@ -101,7 +102,7 @@ char **single_point_crossing_over(Individual *p1, Individual *p2);
  * @param population Pointer to the struct population which contains the current generation
  * @param rand_char Pointer to the function that generates a random char
  */
-void mutation(Population *population, char(*rand_char)(void));
+void mutation(Population *population, char (*rand_char)(void));
 
 /**
  * @brief Function that evaluates the population, setting the fitness for each one
@@ -124,5 +125,5 @@ void genetic_algorithm(
     const char *target,
     char (*rand_char)(void),
     int (*fitness_func)(const char *genome, const char *target));
-    
+
 #endif
