@@ -15,10 +15,17 @@ char random_binary_char()
     return n == 0 ? '0' : '1';
 }
 
-int fitness(const char *genome)
+char random_char()
 {
-    const char *target = "1001100101";
+    const char *charset = "abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890, .-;:_!\"#&/()=?@${[]}";
 
+    int len = strlen(charset);
+
+    return charset[rand() % len];
+}
+
+int fitness(const char *genome, const char *target)
+{
     int fit = 0;
 
     for (int i = 0; i < strlen(genome); i++)

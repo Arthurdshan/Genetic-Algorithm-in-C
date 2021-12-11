@@ -109,20 +109,20 @@ void mutation(Population *population, char(*rand_char)(void));
  * @param population
  * @param fitness_func
  */
-void evaluation(Population *population, int (*fitness_func)(const char *genome));
+void evaluation(Population *population, int (*fitness_func)(const char *genome, const char *target), const char *target);
 
 /**
  * @brief Genetic algorithm
  *
  * @param population_size
- * @param genome_size
+ * @param target The target string to be generated
  * @param rand_char Pointer to the function that generates a random char
  * @param fitness_func Pointer to the function that calculates the fitness
  */
 void genetic_algorithm(
     int population_size,
-    int genome_size,
+    const char *target,
     char (*rand_char)(void),
-    int (*fitness_func)(const char *genome));
+    int (*fitness_func)(const char *genome, const char *target));
     
 #endif

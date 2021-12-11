@@ -23,11 +23,18 @@
 char random_binary_char();
 
 /**
+ * @brief Function that generates a random char
+ * 
+ * @return char 
+ */
+char random_char();
+
+/**
  * @brief Evaluation function which calculates the fitness for the passed genome
  *
  * @param genome The genome to calculate the fitness
  * @return int
  */
-int fitness(const char *genome);
+int fitness(const char *genome, const char *target);
 
 #endif

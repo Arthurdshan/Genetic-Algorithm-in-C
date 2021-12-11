@@ -55,6 +55,20 @@ static void merge(Individual **array, int initial_position, int middle, int fina
             j++;
         }
     }
+
+    for (int i = 0; i < left_quantity + 1; i++)
+    {
+        dealocate_individual(&left[i]);
+    }
+
+    free(left);
+
+    for (int i = 0; i < right_quantity + 1; i++)
+    {
+        dealocate_individual(&right[i]);
+    }
+    
+    free(right);
 }
 
 void merge_sort(Individual **array, int left, int right)
