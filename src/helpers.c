@@ -67,7 +67,7 @@ static void merge(Individual **array, int initial_position, int middle, int fina
     {
         dealocate_individual(&right[i]);
     }
-    
+
     free(right);
 }
 
@@ -100,7 +100,7 @@ void output_to_file(Population *population, Population *new_population, int gene
 
     for (int i = 0; i < population->pop_size; i++)
     {
-        fprintf(f, "DNA: %s\t Fitness:%d\n", population->population[i]->genome, population->population[i]->fitness);
+        fprintf(f, "DNA: %s\t Fitness:%f\n", population->population[i]->genome, population->population[i]->fitness);
     }
 
     fprintf(f, "\n");
@@ -111,7 +111,7 @@ void output_to_file(Population *population, Population *new_population, int gene
 
         for (int i = 0; i < new_population->pop_size; i++)
         {
-            fprintf(f, "DNA: %s\t Fitness:%d\n", new_population->population[i]->genome, new_population->population[i]->fitness);
+            fprintf(f, "DNA: %s\t Fitness:%f\n", new_population->population[i]->genome, new_population->population[i]->fitness);
         }
 
         fprintf(f, "\n");
@@ -122,4 +122,17 @@ void output_to_file(Population *population, Population *new_population, int gene
     }
 
     fclose(f);
+}
+
+int compare_float(float f1, float f2)
+{
+    float precision = 0.00001;
+    if (((f1 - precision) < f2) && ((f1 + precision) > f2))
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }

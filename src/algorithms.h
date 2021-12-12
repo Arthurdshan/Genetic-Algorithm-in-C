@@ -30,11 +30,19 @@ char random_binary_char();
 char random_char();
 
 /**
- * @brief Evaluation function which calculates the fitness for the passed genome
- *
- * @param genome The genome to calculate the fitness
- * @return int
+ * @brief Binary string to int
+ * 
+ * @param str 
+ * @return int 
  */
-int fitness(const char *genome, const char *target);
+int bstoi(const char *str);
+
+/**
+ * @brief Function that calculates the fitness for a given genome 
+ * 
+ * @param genome 
+ * @return double 
+ */
+float equation_fitness(const char *genome);
 
 #endif

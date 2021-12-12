@@ -17,7 +17,7 @@
 struct individual
 {
     char *genome;
-    int fitness;
+    float fitness;
 };
 
 struct population
@@ -57,7 +57,7 @@ Population *generate_population(int size, int genome_length, char (*rand_char)(v
 /**
  * @brief Free the memory used by the population struct
  *
- * @param population Double pointer to the struct, pass the adress if using a single pointer
+ * @param population float pointer to the struct, pass the adress if using a single pointer
  */
 void dealocate_population(Population **population);
 
@@ -68,12 +68,12 @@ void dealocate_population(Population **population);
  * @param fitness The fitness value of the new individual
  * @return Individual*
  */
-Individual *create_individual(const char *genome, int fitness);
+Individual *create_individual(const char *genome, float fitness);
 
 /**
  * @brief Free the memory used by the invidivual passed by parameter
  *
- * @param idv Double pointer to the struct, pass the adress if using a single pointer
+ * @param idv float pointer to the struct, pass the adress if using a single pointer
  */
 void dealocate_individual(Individual **idv);
 
@@ -110,22 +110,22 @@ void mutation(Population *population, char (*rand_char)(void));
  * @param population
  * @param fitness_func
  */
-void evaluation(Population *population, int (*fitness_func)(const char *genome, const char *target), const char *target);
+void evaluation(Population *population, float (*fitness_func)(const char *genome));
 
 /**
  * @brief Genetic algorithm
  *
  * @param population_size
- * @param target The target string to be generated
+ * @param genome_size
  * @param rand_char Pointer to the function that generates a random char
  * @param desired_fitness The value of fitness to be encountered
  * @param fitness_func Pointer to the function that calculates the fitness
  */
 void genetic_algorithm(
     int population_size,
-    const char *target,
+    int genome_size,
     char (*rand_char)(void),
-    int desired_fitness,
-    int (*fitness_func)(const char *genome, const char *target));
+    float desired_fitness,
+    float (*fitness_func)(const char *genome));
 
 #endif

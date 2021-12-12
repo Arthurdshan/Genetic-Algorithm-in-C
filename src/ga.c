@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <time.h>
+#include <time.h>
 
 #include "algorithms.h"
 #include "ga.h"
@@ -55,18 +56,22 @@ void dealocate_population(Population **population)
         free(pop->population[i]->genome);
         free(pop->population[i]);
     }
-    free(pop->population);
     free(pop);
     pop = NULL;
 }
 
-Individual *create_individual(const char *genome, int fitness)
+Individual *create_individual(const char *genome, float fitness)
 {
     Individual *idv = malloc(sizeof(Individual));
     idv->genome = malloc(strlen(genome) + 1);
 
-    strcpy(idv->genome, genome);
     idv->fitness = fitness;
+
+    for (int i = 0; i < strlen(genome); i++)
+    {
+        idv->genome[i] = genome[i];
+    }
+    idv->genome[strlen(genome)] = '\0';
 
     return idv;
 }
@@ -81,15 +86,15 @@ void dealocate_individual(Individual **idv)
 
 Individual *selection(Population *population)
 {
-    int total_sum = 0;
+    float total_sum = 0;
 
     for (int i = 0; i < population->pop_size; i++)
     {
         total_sum += population->population[i]->fitness;
     }
 
-    int index = rand() % total_sum;
-    int sum = 0;
+    float index = rand() * (total_sum / RAND_MAX);
+    float sum = 0;
     int i = 0;
 
     while (sum < index)
@@ -117,7 +122,7 @@ char **single_point_crossing_over(Individual *p1, Individual *p2, char (*rand_ch
     {
         for (int j = 0; j < size; j++)
         {
-            double p = (double)(rand() % 100) / 100;
+            float p = (float)(rand() % 100) / 100;
 
             if (p < 0.50)
             {
@@ -129,7 +134,7 @@ char **single_point_crossing_over(Individual *p1, Individual *p2, char (*rand_ch
             }
             else
             {
-                offsprings[i][j] = random_char();
+                offsprings[i][j] = rand_char();
             }
         }
     }
@@ -156,39 +161,37 @@ void mutation(Population *population, char (*rand_char)(void))
     }
 }
 
-void evaluation(Population *population, int (*fitness_func)(const char *genome, const char *target), const char *target)
+void evaluation(Population *population, float (*fitness_func)(const char *genome))
 {
     for (int i = 0; i < population->pop_size; i++)
     {
-        population->population[i]->fitness = fitness_func(population->population[i]->genome, target);
+        population->population[i]->fitness = fitness_func(population->population[i]->genome);
     }
 }
 
 void genetic_algorithm(
     int population_size,
-    const char *target,
+    int genome_size,
     char (*rand_char)(void),
-    int desired_fitness,
-    int (*fitness_func)(const char *genome, const char *target))
+    float desired_fitness,
+    float (*fitness_func)(const char *genome))
 {
     srand(time(NULL));
 
     int generation = 0;
-
-    int genome_size = strlen(target);
 
     start_file();
 
     clock_t time = clock();
 
     Population *population = generate_population(population_size, genome_size, rand_char);
-    evaluation(population, fitness_func, target);
+    evaluation(population, fitness_func);
 
     while (1)
     {
         merge_sort(population->population, 0, population->pop_size - 1);
 
-        if (population->population[0]->fitness == desired_fitness)
+        if (compare_float(population->population[0]->fitness, desired_fitness))
         {
             break;
         }
@@ -214,8 +217,8 @@ void genetic_algorithm(
 
             char **offsprings = single_point_crossing_over(p1, p2, rand_char);
 
-            new_generation->population[j++] = create_individual(offsprings[0], -1);
-            new_generation->population[j++] = create_individual(offsprings[1], -1);
+            new_generation->population[j++] = create_individual(offsprings[0], -1.0);
+            new_generation->population[j++] = create_individual(offsprings[1], -1.0);
 
             free(offsprings[0]);
             free(offsprings[1]);
@@ -227,7 +230,7 @@ void genetic_algorithm(
             free(p1);
             free(p2);
         }
-        evaluation(new_generation, fitness_func, target);
+        evaluation(new_generation, fitness_func);
 
         output_to_file(population, new_generation, generation);
 
@@ -240,7 +243,7 @@ void genetic_algorithm(
     time = clock() - time;
 
     printf("\nGenerations: %d\n", generation);
-    printf("Time: %lfs\n", ((double)time) / CLOCKS_PER_SEC);
+    printf("Time: %lfs\n", ((float)time) / CLOCKS_PER_SEC);
     printf("Best solution: %s\n\n", population->population[0]->genome);
 
     output_to_file(population, NULL, generation);

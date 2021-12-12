@@ -36,4 +36,13 @@ void start_file();
  */
 void output_to_file(Population *population, Population *new_population, int generation);
 
+/**
+ * @brief Function to compare two float numbers
+ * 
+ * @param f1 
+ * @param f2 
+ * @return int 1 if its equal, 0 if its not
+ */
+int compare_float(float f1, float f2);
+
 #endif

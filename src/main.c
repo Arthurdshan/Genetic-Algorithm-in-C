@@ -7,7 +7,5 @@
 
 int main()
 {
-    const char *target = "I like genetic algorithms";
-
-    genetic_algorithm(1000, target, &random_char, (int)strlen(target), &fitness);
+    genetic_algorithm(8, 8, &random_binary_char, 1.0, &equation_fitness);
 }
