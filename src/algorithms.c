@@ -30,7 +30,7 @@ int fitness(const char *genome, const char *target)
 
     for (int i = 0; i < strlen(genome); i++)
     {
-        if (genome[i] != target[i])
+        if (genome[i] == target[i])
         {
             fit++;
         }

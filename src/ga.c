@@ -81,30 +81,28 @@ void dealocate_individual(Individual **idv)
 
 Individual *selection(Population *population)
 {
-    // int total_sum = 0;
+    int total_sum = 0;
 
-    // for (int i = 0; i < population->pop_size; i++)
-    // {
-    //     total_sum += population->population[i]->fitness;
-    // }
+    for (int i = 0; i < population->pop_size; i++)
+    {
+        total_sum += population->population[i]->fitness;
+    }
 
-    // int index = rand() % total_sum;
-    // int sum = 0;
-    // int i = 0;
+    int index = rand() % total_sum;
+    int sum = 0;
+    int i = 0;
 
-    // while (sum < index)
-    // {
-    //     sum += population->population[i++]->fitness;
-    // }
+    while (sum < index)
+    {
+        sum += population->population[i++]->fitness;
+    }
 
-    // if (i >= population->pop_size)
-    // {
-    //     i = population->pop_size - 1;
-    // }
+    if (i >= population->pop_size)
+    {
+        i = population->pop_size - 1;
+    }
 
-    int random = rand() % (int)population->pop_size / 2;
-
-    return create_individual(population->population[random]->genome, population->population[random]->fitness);
+    return create_individual(population->population[i]->genome, population->population[i]->fitness);
 }
 
 char **single_point_crossing_over(Individual *p1, Individual *p2, char (*rand_char)(void))
@@ -170,6 +168,7 @@ void genetic_algorithm(
     int population_size,
     const char *target,
     char (*rand_char)(void),
+    int desired_fitness,
     int (*fitness_func)(const char *genome, const char *target))
 {
     srand(time(NULL));
@@ -189,7 +188,7 @@ void genetic_algorithm(
     {
         merge_sort(population->population, 0, population->pop_size - 1);
 
-        if (population->population[0]->fitness == 0)
+        if (population->population[0]->fitness == desired_fitness)
         {
             break;
         }

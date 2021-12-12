@@ -118,12 +118,14 @@ void evaluation(Population *population, int (*fitness_func)(const char *genome, 
  * @param population_size
  * @param target The target string to be generated
  * @param rand_char Pointer to the function that generates a random char
+ * @param desired_fitness The value of fitness to be encountered
  * @param fitness_func Pointer to the function that calculates the fitness
  */
 void genetic_algorithm(
     int population_size,
     const char *target,
     char (*rand_char)(void),
+    int desired_fitness,
     int (*fitness_func)(const char *genome, const char *target));
 
 #endif

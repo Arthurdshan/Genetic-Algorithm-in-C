@@ -32,13 +32,13 @@ static void merge(Individual **array, int initial_position, int middle, int fina
             array[middle + 1 + j]->fitness);
     }
 
-    left[left_quantity] = right[right_quantity] = create_individual("sentinel", INT_MAX);
+    left[left_quantity] = right[right_quantity] = create_individual("sentinel", INT_MIN);
 
     i = j = 0;
 
     for (k = initial_position; k <= final_position; k++)
     {
-        if (left[i]->fitness <= right[j]->fitness)
+        if (left[i]->fitness >= right[j]->fitness)
         {
             dealocate_individual(&array[k]);
             array[k] = create_individual(
