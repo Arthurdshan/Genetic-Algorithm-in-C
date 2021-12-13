@@ -56,6 +56,7 @@ void dealocate_population(Population **population)
         free(pop->population[i]->genome);
         free(pop->population[i]);
     }
+    free(pop->population);
     free(pop);
     pop = NULL;
 }

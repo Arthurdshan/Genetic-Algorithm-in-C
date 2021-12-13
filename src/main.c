@@ -7,5 +7,5 @@
 
 int main()
 {
-    genetic_algorithm(8, 8, &random_binary_char, 1.0, &equation_fitness);
+    genetic_algorithm(10, 8, &random_binary_char, 1.0, &equation_fitness);
 }
