@@ -59,14 +59,14 @@ static void merge(Individual **array, int initial_position, int middle, int fina
         }
     }
 
-    for (int i = 0; i < left_quantity; i++)
+    for (int i = 0; i < left_quantity + 1; i++)
     {
         dealocate_individual(&left[i]);
     }
 
     free(left);
 
-    for (int i = 0; i < right_quantity; i++)
+    for (int i = 0; i < right_quantity + 1; i++)
     {
         dealocate_individual(&right[i]);
     }
