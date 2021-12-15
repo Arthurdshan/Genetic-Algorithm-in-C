@@ -7,7 +7,7 @@
 
 int main()
 {
-    Options option;
+    int option;
     int size;
 
 start:
