@@ -19,7 +19,7 @@ start:
     printf("Insert the population size:");
     scanf("%d", &size);
 
-    if (size < 0 || size % 2 != 0)
+    if (size < 0 || size % 10 != 0)
         goto start;
 
     switch (option)
