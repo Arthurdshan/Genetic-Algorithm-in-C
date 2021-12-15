@@ -25,11 +25,11 @@ start:
     switch (option)
     {
     case QUEENS:
-        genetic_algorithm(size, 8, 28.0, 0, &random_char_eight_queens, &eight_queen_fitness);
+        genetic_algorithm(size, 8, 28.0, option, &random_char_eight_queens, &eight_queen_fitness);
         break;
 
     case MAXIMIZE:
-        genetic_algorithm(size, 8, 1.0, 0, &random_binary_char, &maximize_function_fitness);
+        genetic_algorithm(size, 8, 1.0, option, &random_binary_char, &maximize_function_fitness);
         break;
 
     default:
