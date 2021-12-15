@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <time.h>
 #include <math.h>
+#include <stdbool.h>
 
 #include "algorithms.h"
 #include "ga.h"
@@ -11,21 +12,6 @@
 #include "helpers.h"
 
 #define PI 3.142857
-
-char random_binary_char()
-{
-    int n = rand() % 2;
-    return n == 0 ? '0' : '1';
-}
-
-char random_char()
-{
-    const char *charset = "abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890, .-;:_!\"#&/()=?@${[]}";
-
-    int len = strlen(charset);
-
-    return charset[rand() % len];
-}
 
 static inline float equation(int x)
 {
@@ -35,38 +21,60 @@ static inline float equation(int x)
     return sin(v2);
 }
 
-int fitness(const char *genome, const char *target)
-{
-    int fit = 0;
-
-    for (int i = 0; i < strlen(genome); i++)
-    {
-        if (genome[i] == target[i])
-        {
-            fit++;
-        }
-    }
-
-    return fit;
-}
-
-int bstoi(const char *str)
-{
-    int value = 0;
-    int index_counter = 0;
-
-    for (int i = strlen(str) - 1; i >= 0; i--)
-    {
-        if (str[i] == '1')
-        {
-            value += pow(2, index_counter);
-        }
-        index_counter++;
-    }
-    return value;
-}
-
-float equation_fitness(const char *genome)
+float maximize_function_fitness(const char *genome)
 {
     return equation(bstoi(genome));
+}
+
+static int uniques(int *a, int n)
+{
+    int i, j, count = 1;
+    for (i = 1; i < n; i++)
+    {
+        for (j = 0; j < i; j++)
+        {
+            if (a[i] == a[j])
+            {
+                break;
+            }
+        }
+        if (i == j)
+        {
+            count++;
+        }
+    }
+    return count;
+}
+
+float eight_queen_fitness(const char *genome)
+{
+    float fitness = 28.0;
+
+    int aux[8];
+    
+    for (int i = 0; i < 8; i++)
+    {
+        int pos = genome[i] - '0';
+        aux[i] = pos;
+    }
+
+    int rc = 8 - uniques(aux, 8);
+    fitness -= (float)rc;
+
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = i; j < 8; j++)
+        {
+            if (i != j)
+            {
+                int x = abs(i - j);
+                int y = abs(aux[i] - aux[j]);
+                if (x == y)
+                {
+                    fitness -= 1.0;
+                }
+            }
+        }
+    }    
+    return fitness;
 }

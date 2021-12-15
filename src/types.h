@@ -12,7 +12,6 @@
 #ifndef __TYPES_H__
 #define __TYPES_H__
 
-typedef struct population Population;
-typedef struct individual Individual;
+typedef enum options_t { QUEENS, MAXIMIZE } Options;
 
 #endif

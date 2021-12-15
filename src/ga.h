@@ -14,18 +14,18 @@
 
 #include "types.h"
 
-struct individual
+typedef struct individual
 {
     char *genome;
     float fitness;
-};
+} Individual;
 
-struct population
+typedef struct population
 {
     Individual **population;
     int pop_size;
     int dna_size;
-};
+} Population;
 
 /**
  * @brief Function that generates a random genome based on the rand_char function
@@ -68,7 +68,7 @@ void dealocate_population(Population **population);
  * @param fitness The fitness value of the new individual
  * @return Individual*
  */
-Individual *create_individual(const char *genome, float fitness);
+Individual *create_individual(char *genome, float fitness);
 
 /**
  * @brief Free the memory used by the invidivual passed by parameter
@@ -92,9 +92,9 @@ Individual *selection(Population *population);
  * @param p1 Pointer to the first parent
  * @param p2 Pointer to the second parent
  * @param rand_char Pointer to the function that generates a random char
- * @return char**
+ * @return char*
  */
-char **single_point_crossing_over(Individual *p1, Individual *p2, char (*rand_char)(void));
+char *single_point_crossing_over(Individual *p1, Individual *p2, char (*rand_char)(void));
 
 /**
  * @brief Function that simulates the mutation on a single genome from the population.
@@ -117,15 +117,17 @@ void evaluation(Population *population, float (*fitness_func)(const char *genome
  *
  * @param population_size
  * @param genome_size
- * @param rand_char Pointer to the function that generates a random char
  * @param desired_fitness The value of fitness to be encountered
+ * @param problem The problem that is being solved by the GA
+ * @param rand_char Pointer to the function that generates a random char
  * @param fitness_func Pointer to the function that calculates the fitness
  */
 void genetic_algorithm(
     int population_size,
     int genome_size,
-    char (*rand_char)(void),
     float desired_fitness,
+    Options problem,
+    char (*rand_char)(void),
     float (*fitness_func)(const char *genome));
 
 #endif

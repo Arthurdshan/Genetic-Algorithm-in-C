@@ -1,8 +1,7 @@
 /**
  * @file algorithms.h
  * @author Arthur Han
- * @brief Header file containing all the extra functions to the genetic algorithm, here
- * contains the base genome generator, fitness functions, etc..
+ * @brief Header file containing all fitness functions for its problems
  * @version 0.1
  * @date 2021-12-10
  *
@@ -13,29 +12,7 @@
 #ifndef __ALGORITHMS_H__
 #define __ALGORITHMS_H__
 
-#include "types.h"
-
-/**
- * @brief Function that generates either 0 or 1
- *
- * @return char
- */
-char random_binary_char();
-
-/**
- * @brief Function that generates a random char
- * 
- * @return char 
- */
-char random_char();
-
-/**
- * @brief Binary string to int
- * 
- * @param str 
- * @return int 
- */
-int bstoi(const char *str);
+#include "genetic_algorithm.h"
 
 /**
  * @brief Function that calculates the fitness for a given genome 
@@ -43,6 +20,14 @@ int bstoi(const char *str);
  * @param genome 
  * @return double 
  */
-float equation_fitness(const char *genome);
+float maximize_function_fitness(const char *genome);
+
+/**
+ * @brief 
+ * 
+ * @param genome 
+ * @return float 
+ */
+float eight_queen_fitness(const char *genome);
 
 #endif

@@ -45,4 +45,47 @@ void output_to_file(Population *population, Population *new_population, int gene
  */
 int compare_float(float f1, float f2);
 
+/**
+ * @brief Binary string to int
+ * 
+ * @param str 
+ * @return int 
+ */
+int bstoi(const char *str);
+
+/**
+ * @brief Function that generates either 0 or 1
+ *
+ * @return char
+ */
+char random_binary_char();
+
+/**
+ * @brief Function that generates a random char
+ * 
+ * @return char 
+ */
+char random_char();
+
+/**
+ * @brief Generate numbers between 0 and 7 for the eight queens problem
+ * 
+ * @return char 
+ */
+char random_char_eight_queens();
+
+/**
+ * @brief Output the genome in the format of a chess board on the console
+ * 
+ * @param genome
+ */
+void print_board(const char *genome);
+
+/**
+ * @brief Output the genome to the log file 
+ * @param size The size of the board
+ * @param genome 
+ */
+void output_board_to_file(int size, const char *genome);
+
 #endif

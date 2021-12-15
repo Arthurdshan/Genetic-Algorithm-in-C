@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdint.h>
 #include <time.h>
-#include <time.h>
 
 #include "algorithms.h"
 #include "ga.h"
@@ -11,7 +10,7 @@
 
 char *generate_genome(int size, char (*rand_char)(void))
 {
-    char *genome = malloc(size + 1);
+    char *genome = (char *)malloc(size + 1);
 
     for (int i = 0; i < size; i++)
     {
@@ -24,8 +23,8 @@ char *generate_genome(int size, char (*rand_char)(void))
 
 Population *empty_population(int size)
 {
-    Population *population = malloc(sizeof(Population));
-    population->population = malloc(size * sizeof(Individual *));
+    Population *population = (Population *)malloc(sizeof(Population));
+    population->population = (Individual **)malloc(size * sizeof(Individual *));
     population->pop_size = size;
 
     return population;
@@ -39,7 +38,7 @@ Population *generate_population(int size, int genome_length, char (*rand_char)(v
 
     for (int i = 0; i < size; i++)
     {
-        population->population[i] = malloc(sizeof(Individual));
+        population->population[i] = (Individual *)malloc(sizeof(Individual));
         population->population[i]->genome = generate_genome(genome_length, rand_char);
         population->population[i]->fitness = -1;
     }
@@ -57,14 +56,14 @@ void dealocate_population(Population **population)
         free(pop->population[i]);
     }
     free(pop->population);
-    free(pop);
-    pop = NULL;
+    free(pop); pop = NULL;
 }
 
-Individual *create_individual(const char *genome, float fitness)
+Individual *create_individual(char *genome, float fitness)
 {
-    Individual *idv = malloc(sizeof(Individual));
-    idv->genome = malloc(strlen(genome) + 1);
+    Individual *idv = (Individual *)malloc(sizeof(Individual));
+    int size = strlen(genome);
+    idv->genome = malloc(size + 1);
 
     idv->fitness = fitness;
 
@@ -111,39 +110,33 @@ Individual *selection(Population *population)
     return create_individual(population->population[i]->genome, population->population[i]->fitness);
 }
 
-char **single_point_crossing_over(Individual *p1, Individual *p2, char (*rand_char)(void))
+char *single_point_crossing_over(Individual *p1, Individual *p2, char (*rand_char)(void))
 {
     int size = strlen(p1->genome);
 
-    char **offsprings = malloc(2 * sizeof(char *));
-    offsprings[0] = malloc(size + 1);
-    offsprings[1] = malloc(size + 1);
-
-    for (int i = 0; i < 2; i++)
+    char *offspring = (char *)malloc(size + 1);
+    
+    for (int j = 0; j < size; j++)
     {
-        for (int j = 0; j < size; j++)
-        {
-            float p = (float)(rand() % 100) / 100;
+        float p = (float)(rand() % 100) / 100;
 
-            if (p < 0.50)
-            {
-                offsprings[i][j] = p1->genome[j];
-            }
-            else if (p < 0.90)
-            {
-                offsprings[i][j] = p2->genome[j];
-            }
-            else
-            {
-                offsprings[i][j] = rand_char();
-            }
+        if (p < 0.50)
+        {
+            offspring[j] = p1->genome[j];
+        }
+        else if (p < 0.90)
+        {
+            offspring[j] = p2->genome[j];
+        }
+        else
+        {
+            offspring[j] = rand_char();
         }
     }
 
-    offsprings[0][size] = '\0';
-    offsprings[1][size] = '\0';
-
-    return offsprings;
+    offspring[size] = '\0';
+    
+    return offspring;
 }
 
 void mutation(Population *population, char (*rand_char)(void))
@@ -173,8 +166,9 @@ void evaluation(Population *population, float (*fitness_func)(const char *genome
 void genetic_algorithm(
     int population_size,
     int genome_size,
-    char (*rand_char)(void),
     float desired_fitness,
+    Options problem,
+    char (*rand_char)(void),
     float (*fitness_func)(const char *genome))
 {
     srand(time(NULL));
@@ -211,31 +205,27 @@ void genetic_algorithm(
 
         int k = (90 * population->pop_size) / 100;
 
-        for (int i = (population->pop_size - k) / 2, j = elitism_range; i < (population_size / 2); i++)
+        for (int i = 0, j = elitism_range; i < k; i++)
         {
             Individual *p1 = selection(population);
             Individual *p2 = selection(population);
 
-            char **offsprings = single_point_crossing_over(p1, p2, rand_char);
+            char *offspring = single_point_crossing_over(p1, p2, rand_char);
 
-            new_generation->population[j++] = create_individual(offsprings[0], -1.0);
-            new_generation->population[j++] = create_individual(offsprings[1], -1.0);
+            new_generation->population[j++] = create_individual(offspring, -1.0);
 
-            free(offsprings[0]);
-            free(offsprings[1]);
-            free(offsprings);
+            free(offspring);
 
-            free(p1->genome);
-            free(p2->genome);
-
-            free(p1);
-            free(p2);
+            dealocate_individual(&p1);
+            dealocate_individual(&p2);
         }
         evaluation(new_generation, fitness_func);
 
         output_to_file(population, new_generation, generation);
 
-        dealocate_population(&population);
+        Population **old = &population;
+        dealocate_population(old);
+        
         population = new_generation;
 
         generation++;
@@ -247,6 +237,22 @@ void genetic_algorithm(
     printf("Time: %lfs\n", ((float)time) / CLOCKS_PER_SEC);
     printf("Best solution: %s\n\n", population->population[0]->genome);
 
+    if (problem == QUEENS) print_board(population->population[0]->genome);
+
     output_to_file(population, NULL, generation);
-    dealocate_population(&population);
+    
+    switch(problem)
+    {
+        case QUEENS:
+            output_board_to_file(8, population->population[0]->genome);
+            break;
+        
+        case MAXIMIZE:
+            break;
+        default:
+            break;
+    }
+    
+    Population **old = &population;
+    dealocate_population(old);
 }

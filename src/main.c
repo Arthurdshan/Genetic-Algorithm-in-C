@@ -7,5 +7,32 @@
 
 int main()
 {
-    genetic_algorithm(10, 8, &random_binary_char, 1.0, &equation_fitness);
+    Options option;
+    int size;
+
+start:
+    printf("Chose an option:\n");
+    printf("0. Eight queens\n");
+    printf("1. Maximize a math function\n");
+    scanf("%d", &option);
+
+    printf("Insert the population size:");
+    scanf("%d", &size);
+
+    if (size < 0 || size % 2 != 0)
+        goto start;
+
+    switch (option)
+    {
+    case QUEENS:
+        genetic_algorithm(size, 8, 28.0, 0, &random_char_eight_queens, &eight_queen_fitness);
+        break;
+
+    case MAXIMIZE:
+        genetic_algorithm(size, 8, 1.0, 0, &random_binary_char, &maximize_function_fitness);
+        break;
+
+    default:
+        goto start;
+    }
 }

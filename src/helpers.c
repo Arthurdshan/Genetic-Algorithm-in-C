@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+#include <math.h>
+#include <stdbool.h>
 
 #include "algorithms.h"
 #include "types.h"
@@ -14,9 +16,9 @@ static void merge(Individual **array, int initial_position, int middle, int fina
 
     int left_quantity = middle - initial_position + 1;
     int right_quantity = final_position - middle;
-
-    Individual **left = malloc((left_quantity + 1) * sizeof(Individual *));
-    Individual **right = malloc((right_quantity + 1) * sizeof(Individual *));
+    
+    Individual **left = (Individual **)malloc((left_quantity + 1) * sizeof(Individual *));
+    Individual **right = (Individual **)malloc((right_quantity + 1) * sizeof(Individual *));
 
     for (i = 0; i < left_quantity; i++)
     {
@@ -32,7 +34,8 @@ static void merge(Individual **array, int initial_position, int middle, int fina
             array[middle + 1 + j]->fitness);
     }
 
-    left[left_quantity] = right[right_quantity] = create_individual("sentinel", INT_MIN);
+    left[left_quantity] = create_individual("sentinel", INT_MIN);
+    right[right_quantity] = create_individual("sentinel", INT_MIN);
 
     i = j = 0;
 
@@ -56,14 +59,14 @@ static void merge(Individual **array, int initial_position, int middle, int fina
         }
     }
 
-    for (int i = 0; i < left_quantity + 1; i++)
+    for (int i = 0; i < left_quantity; i++)
     {
         dealocate_individual(&left[i]);
     }
 
     free(left);
 
-    for (int i = 0; i < right_quantity + 1; i++)
+    for (int i = 0; i < right_quantity; i++)
     {
         dealocate_individual(&right[i]);
     }
@@ -118,7 +121,7 @@ void output_to_file(Population *population, Population *new_population, int gene
     }
     else
     {
-        fprintf(f, "Perfect genome encountered at generation: %d\n", generation);
+        fprintf(f, "Perfect genome encountered at generation: %d\n\n", generation);
     }
 
     fclose(f);
@@ -135,4 +138,90 @@ int compare_float(float f1, float f2)
     {
         return 0;
     }
+}
+
+int bstoi(const char *str)
+{
+    int value = 0;
+    int index_counter = 0;
+
+    for (int i = strlen(str) - 1; i >= 0; i--)
+    {
+        if (str[i] == '1')
+        {
+            value += pow(2, index_counter);
+        }
+        index_counter++;
+    }
+    return value;
+}
+
+char random_binary_char()
+{
+    int n = rand() % 2;
+    return n == 0 ? '0' : '1';
+}
+
+char random_char()
+{
+    const char *charset = "abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ 1234567890, .-;:_!\"#&/()=?@${[]}";
+
+    int len = strlen(charset);
+
+    return charset[rand() % len];
+}
+
+char random_char_eight_queens()
+{
+    int n = rand() % 8;
+    char c = n + '0';
+
+    return c;
+}
+
+void print_board(const char *genome)
+{
+    bool board[8][8] = {{false}};
+    
+    for (int i = 0; i < 8; i++)
+    {
+        int pos = genome[i] - '0';
+        board[pos][i] = true;
+    }
+
+    for (int i = 0; i < 8; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            printf("%c ", board[i][j] ? 'X' : '-');
+        }
+        printf("\n");
+    }
+}
+
+void output_board_to_file(int size, const char *genome)
+{
+    FILE *f = fopen("data.txt", "a+");
+
+    if (f == NULL)
+        exit(1);
+
+    bool board[8][8] = {{false}};
+    
+    for (int i = 0; i < size; i++)
+    {
+        int pos = genome[i] - '0';
+        board[pos][i] = true;
+    }
+
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 0; j < size; j++)
+        {
+            fprintf(f, "%c ", board[i][j] ? 'X' : '-');
+        }
+        fprintf(f, "\n");
+    }
+
+    fclose(f);
 }
