@@ -1,3 +1,3 @@
 # Genetic-Algorithm
 
-Just a simple implementation of a genetic algorithm. This GA iterates over generations trying to find a number that maximizes a certain math function (algorithms.c - equation function)
+Simple generic algorithm in C. It solves the eight queens problem and the maximize example. To run, just run the makefile with "make" or "mingw32-make" if on windows.
